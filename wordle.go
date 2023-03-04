@@ -51,12 +51,12 @@ func (g *Game) guess(guess string) []letterStatus {
 			result[i] = LetterIncorrect
 		}
 	}
+	if g.target == guess {
+		g.status = GameWon
+		return result
+	}
 	if g.guesses == 0 {
-		if guess != g.target {
-			g.status = GameLost
-		} else {
-			g.status = GameWon
-		}
+		g.status = GameLost
 	}
 	return result
 }

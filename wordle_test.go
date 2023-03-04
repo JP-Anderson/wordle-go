@@ -29,6 +29,21 @@ func TestFailingAGame(t *testing.T) {
 	assert.Nil(t, result)
 }
 
+func TestWinningAGame(t *testing.T) {
+	// Test that game can be won on turns 1 up to 5 (last guess).
+	turns := []int{1,2,3,4,5}
+	for _, turnNum := range turns {
+		game := New("chess", defaultGuesses)
+		for i := 0; i < turnNum-1; i++ {
+			game.guess("wrong")
+		}
+		game.guess("chess")
+		assert.True(t, game.IsFinished())
+		assert.Equal(t, GameWon, game.status)
+		assert.Nil(t, game.guess("chess"))
+	}
+}
+
 func TestGuess(t *testing.T) {
 	type testCase struct {
 		title string
