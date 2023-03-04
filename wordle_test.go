@@ -6,9 +6,27 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const defaultGuesses = 5
+
 func TestNewWordlePicksTargetWord(t *testing.T) {
-	game := New("shark")
+	game := New("shark", defaultGuesses)
 	assert.Equal(t, "shark", game.target)
+}
+
+func TestFailingAGame(t *testing.T) {
+	game := New("doggy", defaultGuesses)
+	for i := 0; i < defaultGuesses-1; i++ {
+		game.guess("catty")
+		assert.False(t, game.IsFinished())
+		assert.Equal(t, GameInProgress, game.status)
+	}
+	game.guess("catty")
+	assert.True(t, game.IsFinished())
+	assert.Equal(t, GameLost, game.status)
+	
+	// further guesses should return nil for a finished game.
+	result := game.guess("catty")
+	assert.Nil(t, result)
 }
 
 func TestGuess(t *testing.T) {
@@ -40,6 +58,6 @@ func TestGuess(t *testing.T) {
 		},
 	}
 	for _, tc := range cases {
-		assert.Equal(t, tc.output, New(tc.target).guess(tc.guess))
+		assert.Equal(t, tc.output, New(tc.target, defaultGuesses).guess(tc.guess))
 	}
 }

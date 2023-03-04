@@ -15,9 +15,11 @@ func init() {
 type Game struct {
 	target string
 	letterDic map[rune]bool
+	guesses int
+	status GameStatus
 }
 
-func New(target string) *Game {
+func New(target string, guesses int) *Game {
 	dict := map[rune]bool{}
 	for _, r := range target {
 		dict[r] = true
@@ -25,10 +27,20 @@ func New(target string) *Game {
 	return  &Game{
 		target: target,
 		letterDic: dict,
+		guesses: guesses,
+		status: GameInProgress,
 	}
 }
 
+func (g *Game) IsFinished() bool {
+	return g.status != GameInProgress
+}
+
 func (g *Game) guess(guess string) []letterStatus {
+	if g.status != GameInProgress {
+		return nil
+	}
+	g.guesses -= 1
 	result := make([]letterStatus, len(g.target))
 	for i, ch := range g.target {
 		if ch == rune(guess[i]) {
@@ -39,8 +51,23 @@ func (g *Game) guess(guess string) []letterStatus {
 			result[i] = LetterIncorrect
 		}
 	}
+	if g.guesses == 0 {
+		if guess != g.target {
+			g.status = GameLost
+		} else {
+			g.status = GameWon
+		}
+	}
 	return result
 }
+
+type GameStatus int64
+
+const (
+	GameInProgress GameStatus = 0
+	GameLost GameStatus = 1
+	GameWon GameStatus = 2
+)
 
 type letterStatus int64
 
