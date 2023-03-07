@@ -2,38 +2,35 @@ package main
 
 import (
 	"fmt"
+	"sync"
 	"wordle"
 )
 
 func main() {
-	g := wordle.New("puppy", 5)
-	finChan := make(chan bool)
+	wg := &sync.WaitGroup{}
+	wg.Add(1)
+	guesses := 5
+	g := wordle.New("puppy", guesses)
 	guessChan := make(chan string)
-	go run(g, guessChan, finChan)
-	loop:
-	for {
-		fmt.Println("for->")
-		select {
-		case _ = <- finChan:
-			break loop
-		default:
-			fmt.Println("Guess next word")
+	go run(g, guessChan, wg)
+	go func() {
+		for {
+			fmt.Printf("Guess next word. %d guesses left!\n", guesses)
 			var guess string
 			fmt.Scan(&guess)
 			if len(guess) != 5 {
 				fmt.Println("Must be 5 letter word")
 				continue
 			}
+			guesses = guesses-1
 			guessChan<-guess
-			
 		}
-	}
+	}()
+	wg.Wait()
 	close(guessChan)
-	close(finChan)
-	fmt.Println("get here")
 }
 
-func run(g *wordle.Game, guessChan <-chan string, finChan chan<- bool ) {
+func run(g *wordle.Game, guessChan <-chan string, wg *sync.WaitGroup) {
 	for !g.IsFinished() {
 		guess := <- guessChan
 		if len(guess) != 5 {
@@ -43,6 +40,5 @@ func run(g *wordle.Game, guessChan <-chan string, finChan chan<- bool ) {
 		fmt.Println(result)
 	}
 	fmt.Println("Game result ", g.Status)
-	finChan <- true
-	fmt.Println("finished run")
+	wg.Done()
 }
