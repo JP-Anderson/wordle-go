@@ -21,3 +21,10 @@ func TestRandomWord(t *testing.T) {
 	assert.NotNil(t, word)
 	assert.Len(t, word, 5)
 }
+
+func TestLookup(t *testing.T) {
+	wordsList := WordsListFromFile("dic.txt")
+	
+	assert.False(t, wordsList.Valid("appla"))
+	assert.True(t, wordsList.Valid("apple"))
+}
