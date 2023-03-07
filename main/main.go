@@ -2,35 +2,43 @@ package main
 
 import (
 	"fmt"
-	"sync"
 	"wordle"
 )
 
+type WordleSignal int64
+
+const (
+	Start WordleSignal = iota
+	MakeNextGuess
+	Finished
+)
+
 func main() {
-	wg := &sync.WaitGroup{}
-	wg.Add(1)
 	guesses := 5
 	g := wordle.New("puppy", guesses)
 	guessChan := make(chan string)
-	go run(g, guessChan, wg)
-	go func() {
-		for {
-			fmt.Printf("Guess next word. %d guesses left!\n", guesses)
-			var guess string
-			fmt.Scan(&guess)
-			if len(guess) != 5 {
-				fmt.Println("Must be 5 letter word")
-				continue
-			}
-			guesses = guesses-1
-			guessChan<-guess
+	signalChan := make(chan WordleSignal)
+	go run(g, guessChan, signalChan)
+	for {
+		sig := <- signalChan
+		if sig == Finished {
+			break
 		}
-	}()
-	wg.Wait()
+		fmt.Printf("Guess next word. %d guesses left!\n", guesses)
+		var guess string
+		fmt.Scan(&guess)
+		if len(guess) != 5 {
+			fmt.Println("Must be 5 letter word")
+			continue
+		}
+		guesses = guesses-1
+		guessChan<-guess
+	}
 	close(guessChan)
 }
 
-func run(g *wordle.Game, guessChan <-chan string, wg *sync.WaitGroup) {
+func run(g *wordle.Game, guessChan <-chan string, signalChan chan<- WordleSignal) {
+	signalChan <- Start
 	for !g.IsFinished() {
 		guess := <- guessChan
 		if len(guess) != 5 {
@@ -38,7 +46,10 @@ func run(g *wordle.Game, guessChan <-chan string, wg *sync.WaitGroup) {
 		}
 		result := g.Guess(guess)
 		fmt.Println(result)
+		if g.IsFinished() {
+			signalChan <- Finished
+		}
+		signalChan <- MakeNextGuess
 	}
 	fmt.Println("Game result ", g.Status)
-	wg.Done()
 }
