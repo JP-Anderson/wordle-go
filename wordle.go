@@ -61,6 +61,10 @@ func (g *Game) Guess(guess string) []letterStatus {
 	return result
 }
 
+func (g *Game) Target() string {
+	return g.target
+}
+
 type GameStatus int64
 
 const (

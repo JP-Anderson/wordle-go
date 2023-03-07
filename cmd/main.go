@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"wordle"
+	"wordle/words"
 )
 
 type WordleSignal int64
@@ -14,14 +15,20 @@ const (
 )
 
 func main() {
+	wl := words.WordsListFromFile("../words/dic.txt")
 	guesses := 5
-	g := wordle.New("puppy", guesses)
+	g := wordle.New(wl.NextWord(), guesses)
 	guessChan := make(chan string)
 	signalChan := make(chan WordleSignal)
 	go run(g, guessChan, signalChan)
 	for {
 		sig := <- signalChan
 		if sig == Finished {
+			if g.Status == wordle.GameWon {
+				fmt.Printf("You won with %d guesses remaining!\n", guesses)
+			} else {
+				fmt.Printf("Unlucky, the word was %s\n", g.Target())
+			}
 			break
 		}
 		fmt.Printf("Guess next word. %d guesses left!\n", guesses)
