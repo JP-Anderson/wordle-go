@@ -10,14 +10,15 @@ import (
 	"unicode"
 )
 
-
+func init() {
+	rand.Seed(time.Now().Unix())
+}
 
 type WordsList struct{
 	words []string
 }
 
 func (w WordsList) NextWord() string {
-	rand.Seed(time.Now().Unix())
 	return w.words[rand.Intn(len(w.words))]
 }
 
@@ -43,7 +44,7 @@ func WordsListFromFile(listName string) WordsList {
 		if count != 5 {
 			continue loop
 		}
-		words = append(words, split)
+		words = append(words, strings.ToLower(split))
 	}
 	return WordsList{
 		words: words,
