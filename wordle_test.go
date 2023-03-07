@@ -16,16 +16,16 @@ func TestNewWordlePicksTargetWord(t *testing.T) {
 func TestFailingAGame(t *testing.T) {
 	game := New("doggy", defaultGuesses)
 	for i := 0; i < defaultGuesses-1; i++ {
-		game.guess("catty")
+		game.Guess("catty")
 		assert.False(t, game.IsFinished())
-		assert.Equal(t, GameInProgress, game.status)
+		assert.Equal(t, GameInProgress, game.Status)
 	}
-	game.guess("catty")
+	game.Guess("catty")
 	assert.True(t, game.IsFinished())
-	assert.Equal(t, GameLost, game.status)
+	assert.Equal(t, GameLost, game.Status)
 	
 	// further guesses should return nil for a finished game.
-	result := game.guess("catty")
+	result := game.Guess("catty")
 	assert.Nil(t, result)
 }
 
@@ -35,12 +35,12 @@ func TestWinningAGame(t *testing.T) {
 	for _, turnNum := range turns {
 		game := New("chess", defaultGuesses)
 		for i := 0; i < turnNum-1; i++ {
-			game.guess("wrong")
+			game.Guess("wrong")
 		}
-		game.guess("chess")
+		game.Guess("chess")
 		assert.True(t, game.IsFinished())
-		assert.Equal(t, GameWon, game.status)
-		assert.Nil(t, game.guess("chess"))
+		assert.Equal(t, GameWon, game.Status)
+		assert.Nil(t, game.Guess("chess"))
 	}
 }
 
@@ -73,6 +73,6 @@ func TestGuess(t *testing.T) {
 		},
 	}
 	for _, tc := range cases {
-		assert.Equal(t, tc.output, New(tc.target, defaultGuesses).guess(tc.guess))
+		assert.Equal(t, tc.output, New(tc.target, defaultGuesses).Guess(tc.guess))
 	}
 }

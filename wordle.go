@@ -16,7 +16,7 @@ type Game struct {
 	target string
 	letterDic map[rune]bool
 	guesses int
-	status GameStatus
+	Status GameStatus
 }
 
 func New(target string, guesses int) *Game {
@@ -28,16 +28,16 @@ func New(target string, guesses int) *Game {
 		target: target,
 		letterDic: dict,
 		guesses: guesses,
-		status: GameInProgress,
+		Status: GameInProgress,
 	}
 }
 
 func (g *Game) IsFinished() bool {
-	return g.status != GameInProgress
+	return g.Status != GameInProgress
 }
 
-func (g *Game) guess(guess string) []letterStatus {
-	if g.status != GameInProgress {
+func (g *Game) Guess(guess string) []letterStatus {
+	if g.Status != GameInProgress {
 		return nil
 	}
 	g.guesses -= 1
@@ -52,11 +52,11 @@ func (g *Game) guess(guess string) []letterStatus {
 		}
 	}
 	if g.target == guess {
-		g.status = GameWon
+		g.Status = GameWon
 		return result
 	}
 	if g.guesses == 0 {
-		g.status = GameLost
+		g.Status = GameLost
 	}
 	return result
 }
