@@ -31,12 +31,20 @@ func main() {
 			}
 			break
 		}
-		fmt.Printf("Guess next word. %d guesses left!\n", guesses)
 		var guess string
-		fmt.Scan(&guess)
-		if len(guess) != 5 {
-			fmt.Println("Must be 5 letter word")
-			continue
+		inputLoop:
+		for {
+			fmt.Printf("Guess next word. %d guesses left!\n", guesses)
+			fmt.Scan(&guess)
+			if len(guess) != 5 {
+				fmt.Println("Must be 5 letter word")
+				continue inputLoop
+			}
+			if !wl.Valid(guess) {
+				fmt.Printf("%s is not in the dictionary\n", guess)
+				continue inputLoop
+			}
+			break
 		}
 		guesses = guesses-1
 		guessChan<-guess
