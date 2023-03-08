@@ -6,24 +6,16 @@ import (
 	"wordle/words"
 )
 
-type WordleSignal int64
-
-const (
-	Start WordleSignal = iota
-	MakeNextGuess
-	Finished
-)
-
 func main() {
 	wl := words.WordsListFromFile("../words/dic.txt")
 	guesses := 5
 	g := wordle.New(wl.NextWord(), guesses)
 	guessChan := make(chan string)
-	signalChan := make(chan WordleSignal)
-	go run(g, guessChan, signalChan)
+	signalChan := make(chan wordle.GameSignal)
+	go g.Start(guessChan, signalChan)
 	for {
 		sig := <- signalChan
-		if sig == Finished {
+		if sig == wordle.Finished {
 			if g.Status == wordle.GameWon {
 				fmt.Printf("You won with %d guesses remaining!\n", guesses)
 			} else {
@@ -50,21 +42,4 @@ func main() {
 		guessChan<-guess
 	}
 	close(guessChan)
-}
-
-func run(g *wordle.Game, guessChan <-chan string, signalChan chan<- WordleSignal) {
-	signalChan <- Start
-	for !g.IsFinished() {
-		guess := <- guessChan
-		if len(guess) != 5 {
-			continue
-		}
-		result := g.Guess(guess)
-		fmt.Println(result)
-		if g.IsFinished() {
-			signalChan <- Finished
-		}
-		signalChan <- MakeNextGuess
-	}
-	fmt.Println("Game result ", g.Status)
 }
