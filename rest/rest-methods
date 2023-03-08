@@ -1,0 +1,21 @@
+Plan for how rest server might look
+
+Create a game:
+
+-- POST /game
+  username or id in json body
+- creates new game
+- if active game already exists (in map, not doing DB for now), return error
+- if no active game, creates new game and returns user id to locate new game
+
+-- POST /guess
+  json{ userId, guessWord }
+- find active game for userId (returns error if no active game)
+- calls Guess() on game, which returns slice of letter indicators
+- response json{ userId, gameStatus guessIndicators, remainingGuesses  }
+
+gameStatus one of [WON, LOST, ACTIVE]
+
+not in scope:
+- store old games. when game is finished, we remove it from the map. Future work could include a separate DB for old games
+- store active games in DB. games are just stored in an in memory map, which means if the server goes down, games are lost
