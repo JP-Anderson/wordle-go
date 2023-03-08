@@ -1,4 +1,4 @@
-package wordle
+package engine
 
 import (
 	"math/rand"

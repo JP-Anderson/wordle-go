@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"wordle"
+	"wordle/engine"
 	"wordle/words"
 )
 
@@ -17,14 +17,14 @@ const (
 func main() {
 	wl := words.WordsListFromFile("../words/dic.txt")
 	guesses := 5
-	g := wordle.New(wl.NextWord(), guesses)
+	g := engine.New(wl.NextWord(), guesses)
 	guessChan := make(chan string)
 	signalChan := make(chan WordleSignal)
 	go run(g, guessChan, signalChan)
 	for {
 		sig := <- signalChan
 		if sig == Finished {
-			if g.Status == wordle.GameWon {
+			if g.Status == engine.GameWon {
 				fmt.Printf("You won with %d guesses remaining!\n", guesses)
 			} else {
 				fmt.Printf("Unlucky, the word was %s\n", g.Target())
@@ -52,7 +52,7 @@ func main() {
 	close(guessChan)
 }
 
-func run(g *wordle.Game, guessChan <-chan string, signalChan chan<- WordleSignal) {
+func run(g *engine.Game, guessChan <-chan string, signalChan chan<- WordleSignal) {
 	signalChan <- Start
 	for !g.IsFinished() {
 		guess := <- guessChan
