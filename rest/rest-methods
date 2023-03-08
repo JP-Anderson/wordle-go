@@ -5,16 +5,27 @@ Create a game:
 -- POST /game
   username or id in json body
 - creates new game
-- if active game already exists (in map, not doing DB for now), return error
-- if no active game, creates new game and returns user id to locate new game
+- if active game already exists and is NOT finished (in map, not doing DB for now), return error and the id
+- if finished active game deletes old game
+- creates new game for user id
+
+-- GET /game/{id}
+   gets the active game for the ID, can be used to recover a game if the user closes/navigates from the window
+- loads game for the user id from the active game map
+- response json{ userId, gameStatus, previousGuesses }
 
 -- POST /guess
   json{ userId, guessWord }
 - find active game for userId (returns error if no active game)
 - calls Guess() on game, which returns slice of letter indicators
-- response json{ userId, gameStatus guessIndicators, remainingGuesses  }
+- response json{ userId, gameStatus, guessIndicators, remainingGuesses  }
 
-gameStatus one of [WON, LOST, ACTIVE]
+-- GET /answer/{id}
+   gets the answer for game with id. note, the POST guess never returns the target/answer word
+   if the user guessed correctly with the /guess endpoint, the response will already be enough to reveal the word client side
+- if game is not finished, this endpoint returns an error
+- if the game is finished, this endpoint will return the answer to the user to be displayed on the client
+
 
 not in scope:
 - store old games. when game is finished, we remove it from the map. Future work could include a separate DB for old games
