@@ -3,8 +3,10 @@ package wordle
 import (
 	"math/rand"
 	"time"
-	"fmt"
 )
+
+// TODO: import more words from dict txt
+var words = []string{ "stork", "fight", "bough" }
 
 func init() {
 	rand.Seed(time.Now().Unix())
@@ -28,23 +30,6 @@ func New(target string, guesses int) *Game {
 		guesses: guesses,
 		Status: GameInProgress,
 	}
-}
-
-func (g *Game) Start(guessChan <-chan string, signalChan chan<- GameSignal) {
-	signalChan <- Start
-	for !g.IsFinished() {
-		guess := <- guessChan
-		if len(guess) != 5 {
-			continue
-		}
-		result := g.Guess(guess)
-		fmt.Println(result)
-		if g.IsFinished() {
-			signalChan <- Finished
-		}
-		signalChan <- MakeNextGuess
-	}
-	fmt.Println("Game result ", g.Status)
 }
 
 func (g *Game) IsFinished() bool {
@@ -86,14 +71,6 @@ const (
 	GameInProgress GameStatus = 0
 	GameLost GameStatus = 1
 	GameWon GameStatus = 2
-)
-
-type GameSignal int64
-
-const (
-	Start GameSignal = iota
-	MakeNextGuess
-	Finished
 )
 
 type letterStatus int64
