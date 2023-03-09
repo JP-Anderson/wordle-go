@@ -10,8 +10,7 @@ Create a game:
 - creates new game for user id (DONE)
 
 -- GET /game/{id}
-   gets the active game for the ID, can be used to recover a game if the user closes/navigates from the window
-- loads game for the user id from the active game map
+- loads game for the user id from the active game map (DONE)
 - response json{ userId, gameStatus, previousGuesses }
 
 -- POST /guess
