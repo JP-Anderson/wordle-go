@@ -8,10 +8,15 @@ type Guess struct {
 	LetterStatuses string `json:"letter_statuses"`
 }
 
+// GuessRequest is the JSON Request Body sent to the POST /guess endpoint
+type GuessRequest struct {
+	UserID string `json:"user_id"`
+	Guess string `json:"guess"`	
+}
+
 // Game represents a game of Wordle which may be complete or in progress.
 // This will be returned from the GET/game and POST/guess endpoints.
 type Game struct {
-	GameID string `json:"game_id"`
 	UserID string `json:"user_id"`
 	Guesses []Guess `json:"guesses"`
 	TotalGuesses int `json:"total_guesses"`

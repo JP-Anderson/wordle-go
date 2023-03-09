@@ -61,9 +61,30 @@ func TestPostGameReturnsErrorWhenGameExistsForUserID(t *testing.T) {
 	assert.Equal(t, "\"game exists for user 1\"", w2.Body.String())
 }
 
+func TestPostGuessReturnsErrorWithNoGameForUserID(t *testing.T) {
+	router := Router()
+	
+	w := httptest.NewRecorder()
+	guessRequest := &model.GuessRequest{
+		UserID: "id-with-no-game",
+		Guess: "crane",	
+	}
+
+	req, _ := http.NewRequest("POST", "/guess", guessModelToBytesBuffer(t, guessRequest))
+	router.ServeHTTP(w, req)
+	assert.Equal(t, 404, w.Code)
+	assert.Equal(t, "\"game does not exist for user id-with-no-game\"", w.Body.String())
+}
+
 func gameModelToBytesBuffer(t *testing.T, game *model.Game) *bytes.Buffer {
 	buf := new(bytes.Buffer)
 	assert.NoError(t, json.NewEncoder(buf).Encode(game))
+	return buf
+}
+
+func guessModelToBytesBuffer(t *testing.T, guess *model.GuessRequest) *bytes.Buffer {
+	buf := new(bytes.Buffer)
+	assert.NoError(t, json.NewEncoder(buf).Encode(guess))
 	return buf
 }
 
