@@ -65,6 +65,16 @@ func TestPostGameReturnsErrorWhenGameExistsForUserID(t *testing.T) {
 	assert.Equal(t, "\"game exists for user 1\"", w2.Body.String())
 }
 
+func TestGetGameReturns404WithNoGameForUserID(t *testing.T) {
+	router := Router()
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/game/missing-user", nil)
+	router.ServeHTTP(w, req)
+	assert.Equal(t, 404, w.Code)
+	assert.Equal(t, "\"no game exists for user missing-user\"", w.Body.String())
+}
+
 func TestPostGuessReturnsErrorWithNoGameForUserID(t *testing.T) {
 	router := Router()
 	

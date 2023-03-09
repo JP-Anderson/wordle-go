@@ -48,7 +48,7 @@ func getGame(c *gin.Context) {
 	var game *engine.Game
 	var ok bool
 	if game, ok = games[id]; !ok {
-		c.IndentedJSON(http.StatusBadRequest, fmt.Sprintf("no game exists for user %s", id))
+		c.IndentedJSON(http.StatusNotFound, fmt.Sprintf("no game exists for user %s", id))
 		return
 	}
 	
