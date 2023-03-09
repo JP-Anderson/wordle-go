@@ -8,12 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var games = make(map[string]*engine.Game)
+var games map[string]*engine.Game
 
 //todo: move this to engine somewhere?
 const defaultGuesses = 5
 
 func Router() *gin.Engine {
+	games = make(map[string]*engine.Game)
 	r := gin.Default()
 	r.POST("/game", postGame)
 	r.GET("/health", getHealth)
