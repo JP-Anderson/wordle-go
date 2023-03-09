@@ -32,10 +32,6 @@ func New(target string, guesses int) *Game {
 	}
 }
 
-func (g *Game) Guesses() []*model.Guess {
-	return g.guesses
-}
-
 func (g *Game) GuessesMade() int {
 	guessesMade := 0
 	for _, guess := range g.guesses {
@@ -87,6 +83,14 @@ func (g *Game) Guess(guess string) []letterStatus {
 
 func (g *Game) Target() string {
 	return g.target
+}
+
+func (g *Game) ToApiModel(userID string) *model.Game {
+	return &model.Game{
+		UserID: userID,
+		Guesses: g.guesses,
+		GameState: int(g.Status),
+	}
 }
 
 func letterStatusesToString(statuses []letterStatus) string {

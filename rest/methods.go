@@ -38,9 +38,7 @@ func postGame(c *gin.Context) {
 	// todo: add word list to this module and get random word
 	createdGame := engine.New("snack", defaultGuesses)
 	games[id] = createdGame
-	newGame.GameState = int(createdGame.Status)
-	newGame.Guesses = createdGame.Guesses()
-	c.IndentedJSON(http.StatusOK, newGame)
+	c.IndentedJSON(http.StatusOK, createdGame.ToApiModel(id))
 }
 
 func postGuess(c *gin.Context) {
@@ -60,13 +58,7 @@ func postGuess(c *gin.Context) {
 
 	// TODO check game is finished first (will not do this until guess functionality is finished so we can test game is finished)
 	game.Guess(newGuess.Guess)
-	
-	returnModel := &model.Game{
-		Guesses: game.Guesses(),
-		UserID: id,
-		GameState: int(game.Status),
-	}
-	c.IndentedJSON(http.StatusOK, returnModel)
+	c.IndentedJSON(http.StatusOK, game.ToApiModel(id))
 }
 
 func getHealth(c *gin.Context) {
