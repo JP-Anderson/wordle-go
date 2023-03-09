@@ -94,6 +94,16 @@ func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 	req2, _ := http.NewRequest("POST", "/guess", guessModelToBytesBuffer(t, guessRequest))
 	router.ServeHTTP(w2, req2)
 	assert.Equal(t, 200, w2.Code)
+	returnModel := responseRecorderToGameModel(t, w2)
+	assert.Equal(t, 1, returnModel.TotalGuesses)
+	assert.Equal(t, "1", returnModel.UserID)
+	guessModel := &model.Guess{
+		GuessWord: "crane",
+		LetterStatuses: "10210",
+	}
+	guesses := []*model.Guess{guessModel, nil, nil, nil, nil}
+	assert.Equal(t, guesses, returnModel.Guesses)
+	assert.Equal(t, 0, returnModel.GameState)
 }
 
 func gameModelToBytesBuffer(t *testing.T, game *model.Game) *bytes.Buffer {

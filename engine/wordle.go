@@ -32,6 +32,10 @@ func New(target string, guesses int) *Game {
 	}
 }
 
+func (g *Game) Guesses() []*model.Guess {
+	return g.guesses
+}
+
 func (g *Game) GuessesMade() int {
 	guessesMade := 0
 	for _, guess := range g.guesses {
