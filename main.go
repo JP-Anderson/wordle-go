@@ -1,17 +1,11 @@
 package main
 
 import (
-	"net/http"
-	
-	"github.com/gin-gonic/gin"
+	"wordle/rest"	
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/health", getHealth)
+	router := rest.Router()
 	router.Run("localhost:8080")
 }
 
-func getHealth(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, "ok")
-}
