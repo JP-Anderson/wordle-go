@@ -1,12 +1,12 @@
 package engine
 
 import (
+	"wordle/rest/model"
+	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 )
-
-// TODO: import more words from dict txt
-var words = []string{ "stork", "fight", "bough" }
 
 func init() {
 	rand.Seed(time.Now().Unix())
@@ -15,7 +15,7 @@ func init() {
 type Game struct {
 	target string
 	letterDic map[rune]bool
-	guesses int
+	guesses []*model.Guess
 	Status GameStatus
 }
 
@@ -27,9 +27,24 @@ func New(target string, guesses int) *Game {
 	return  &Game{
 		target: target,
 		letterDic: dict,
-		guesses: guesses,
+		guesses: make([]*model.Guess, guesses),
 		Status: GameInProgress,
 	}
+}
+
+func (g *Game) GuessesMade() int {
+	guessesMade := 0
+	for _, guess := range g.guesses {
+		if guess == nil {
+			break
+		}
+		guessesMade += 1
+	}
+	return guessesMade
+}
+
+func (g *Game) GuessesRemaining() int {
+	return len(g.guesses) - g.GuessesMade()
 }
 
 func (g *Game) IsFinished() bool {
@@ -40,7 +55,6 @@ func (g *Game) Guess(guess string) []letterStatus {
 	if g.Status != GameInProgress {
 		return nil
 	}
-	g.guesses -= 1
 	result := make([]letterStatus, len(g.target))
 	for i, ch := range g.target {
 		if ch == rune(guess[i]) {
@@ -51,11 +65,17 @@ func (g *Game) Guess(guess string) []letterStatus {
 			result[i] = LetterIncorrect
 		}
 	}
+	nextGuessIx := g.GuessesMade()
+	guessModel := &model.Guess{
+		GuessWord: guess,
+		LetterStatuses: letterStatusesToString(result),	
+	}
+	g.guesses[nextGuessIx] = guessModel
 	if g.target == guess {
 		g.Status = GameWon
 		return result
 	}
-	if g.guesses == 0 {
+	if nextGuessIx == len(g.guesses)-1 {
 		g.Status = GameLost
 	}
 	return result
@@ -63,6 +83,14 @@ func (g *Game) Guess(guess string) []letterStatus {
 
 func (g *Game) Target() string {
 	return g.target
+}
+
+func letterStatusesToString(statuses []letterStatus) string {
+	sb := strings.Builder{}
+	for _, s := range statuses {
+		sb.WriteString(fmt.Sprintf("%d", s))
+	}
+	return sb.String()
 }
 
 type GameStatus int64
@@ -76,7 +104,7 @@ const (
 type letterStatus int64
 
 const (
-	LetterAndPositionCorrect letterStatus = 1
-	LetterCorrectPositionIncorrect letterStatus = 0
-	LetterIncorrect letterStatus = -1
+	LetterAndPositionCorrect letterStatus = 2
+	LetterCorrectPositionIncorrect letterStatus = 1
+	LetterIncorrect letterStatus = 0
 )
