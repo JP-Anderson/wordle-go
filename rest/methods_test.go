@@ -37,8 +37,8 @@ func TestPostGameReturnsNewGame(t *testing.T) {
 	assert.Equal(t, 200, w.Code)
 
 	returnModel := responseRecorderToGameModel(t, w)
+	assert.Equal(t, []*model.Guess{ nil, nil, nil, nil, nil }, returnModel.Guesses)
 	assert.Equal(t, 0, returnModel.GameState)
-	assert.Equal(t, 5, returnModel.TotalGuesses)
 }
 
 func TestPostGameReturnsErrorWhenGameExistsForUserID(t *testing.T) {
@@ -95,7 +95,6 @@ func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 	router.ServeHTTP(w2, req2)
 	assert.Equal(t, 200, w2.Code)
 	returnModel := responseRecorderToGameModel(t, w2)
-	assert.Equal(t, 1, returnModel.TotalGuesses)
 	assert.Equal(t, "1", returnModel.UserID)
 	guessModel := &model.Guess{
 		GuessWord: "crane",

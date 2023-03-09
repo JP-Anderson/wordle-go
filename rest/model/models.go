@@ -19,7 +19,6 @@ type GuessRequest struct {
 type Game struct {
 	UserID string `json:"user_id"`
 	Guesses []*Guess `json:"guesses"`
-	TotalGuesses int `json:"total_guesses"`
 	GameState int `json:"game_state"`
 }
 

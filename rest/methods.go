@@ -38,8 +38,8 @@ func postGame(c *gin.Context) {
 	// todo: add word list to this module and get random word
 	createdGame := engine.New("snack", defaultGuesses)
 	games[id] = createdGame
-	newGame.TotalGuesses = defaultGuesses
 	newGame.GameState = int(createdGame.Status)
+	newGame.Guesses = createdGame.Guesses()
 	c.IndentedJSON(http.StatusOK, newGame)
 }
 
@@ -62,7 +62,6 @@ func postGuess(c *gin.Context) {
 	game.Guess(newGuess.Guess)
 	
 	returnModel := &model.Game{
-		TotalGuesses: game.GuessesMade(),
 		Guesses: game.Guesses(),
 		UserID: id,
 		GameState: int(game.Status),
