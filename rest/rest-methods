@@ -15,9 +15,10 @@ Create a game:
 - response json{ userId, gameStatus, previousGuesses }
 
 -- POST /guess
-  json{ userId, guessWord }
+  json{ userId, guessWord } (DONE)
 - find active game for userId (returns error if no active game) (DONE)
-- calls Guess() on game, which returns slice of letter indicators
+- calls Guess() on game (DONE)
+- assemble response containing representation of game and past guesses (DONE)
 - response json{ userId, gameStatus, guessIndicators, remainingGuesses  }
 
 -- GET /answer/{id}
