@@ -17,6 +17,7 @@ func Router() *gin.Engine {
 	games = make(map[string]*engine.Game)
 	r := gin.Default()
 	r.POST("/game", postGame)
+	r.GET("/game/:id", getGame)
 	r.POST("/guess", postGuess)
 	r.GET("/health", getHealth)
 	return r
@@ -39,6 +40,19 @@ func postGame(c *gin.Context) {
 	createdGame := engine.New("snack", defaultGuesses)
 	games[id] = createdGame
 	c.IndentedJSON(http.StatusOK, createdGame.ToApiModel(id))
+}
+
+func getGame(c *gin.Context) {
+	id := c.Param("id")
+
+	var game *engine.Game
+	var ok bool
+	if game, ok = games[id]; !ok {
+		c.IndentedJSON(http.StatusBadRequest, fmt.Sprintf("no game exists for user %s", id))
+		return
+	}
+	
+	c.IndentedJSON(http.StatusOK, game.ToApiModel(id))
 }
 
 func postGuess(c *gin.Context) {

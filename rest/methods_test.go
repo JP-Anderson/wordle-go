@@ -3,6 +3,7 @@ package rest
 import (
 	"encoding/json"
 	"bytes"
+	"fmt"	
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,6 +11,7 @@ import (
 	"wordle/rest/model"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/gin-gonic/gin"
 )
 
 func TestHealthRoute(t *testing.T) {
@@ -39,6 +41,10 @@ func TestPostGameReturnsNewGame(t *testing.T) {
 	returnModel := responseRecorderToGameModel(t, w)
 	assert.Equal(t, []*model.Guess{ nil, nil, nil, nil, nil }, returnModel.Guesses)
 	assert.Equal(t, 0, returnModel.GameState)
+
+	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
+		getGameEndpointReturnsExpectedModel(t, "1", router, returnModel)
+	})
 }
 
 func TestPostGameReturnsErrorWhenGameExistsForUserID(t *testing.T) {
@@ -103,6 +109,19 @@ func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 	guesses := []*model.Guess{guessModel, nil, nil, nil, nil}
 	assert.Equal(t, guesses, returnModel.Guesses)
 	assert.Equal(t, 0, returnModel.GameState)
+
+	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
+		getGameEndpointReturnsExpectedModel(t, "1", router, returnModel)
+	})
+}
+
+func getGameEndpointReturnsExpectedModel(t *testing.T, id string, router *gin.Engine, expectedReturnModel *model.Game) {
+	getGame, _ := http.NewRequest("GET", fmt.Sprintf("/game/%s", id), nil)
+	w := httptest.NewRecorder()
+	router.ServeHTTP(w, getGame)
+	assert.Equal(t, 200, w.Code)
+	getReturnModel := responseRecorderToGameModel(t, w)
+	assert.Equal(t, expectedReturnModel, getReturnModel)
 }
 
 func gameModelToBytesBuffer(t *testing.T, game *model.Game) *bytes.Buffer {
