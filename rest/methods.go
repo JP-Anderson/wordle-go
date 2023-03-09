@@ -51,10 +51,15 @@ func postGuess(c *gin.Context) {
 	}
 
 	id := newGuess.UserID
-	if _, ok := games[id]; !ok {
+	var game engine.Game
+	var ok bool
+	if _, ok = games[id]; !ok {
 		c.IndentedJSON(http.StatusNotFound, fmt.Sprintf("game does not exist for user %s", id))
 		return
 	}
+
+	// TODO check game is finished first (will not do this until guess functionality is finished so we can test game is finished)
+	_ = game.Guess(newGuess.Guess)
 }
 
 func getHealth(c *gin.Context) {
