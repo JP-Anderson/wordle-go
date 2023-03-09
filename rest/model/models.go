@@ -1,4 +1,4 @@
-package models
+package model
 
 // Guess represents a guess which has been made in the past.
 // - GuessWord is the actual guess made by the player.
