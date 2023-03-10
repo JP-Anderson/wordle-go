@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"wordle/engine"
 	"wordle/rest/model"
+	"wordle/rest/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +17,7 @@ const defaultGuesses = 5
 func Router() *gin.Engine {
 	games = make(map[string]*engine.Game)
 	r := gin.Default()
+	r.Use(middleware.CORS())
 	r.POST("/game", postGame)
 	r.GET("/game/:id", getGame)
 	r.POST("/guess", postGuess)
