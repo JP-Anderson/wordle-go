@@ -29,11 +29,7 @@ func TestPostGameReturnsNewGame(t *testing.T) {
 	router := Router()
 	
 	w := httptest.NewRecorder()
-	newGameRequest := &model.Game{
-		UserID: "1",		
-	}
-	req, _ := http.NewRequest("POST", "/game", gameModelToBytesBuffer(t, newGameRequest))
-	
+	req := newGameRequest(t, "1")
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
@@ -41,6 +37,7 @@ func TestPostGameReturnsNewGame(t *testing.T) {
 	returnModel := responseRecorderToGameModel(t, w)
 	assert.Equal(t, []*model.Guess{ nil, nil, nil, nil, nil }, returnModel.Guesses)
 	assert.Equal(t, 0, returnModel.GameState)
+	assert.Nil(t, returnModel.Answer)
 
 	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
 		getGameEndpointReturnsExpectedModel(t, "1", router, returnModel)
@@ -51,15 +48,12 @@ func TestPostGameReturnsErrorWhenGameExistsForUserID(t *testing.T) {
 	router := Router()
 	
 	w := httptest.NewRecorder()
-	newGameRequest := &model.Game{
-		UserID: "1",
-	}
-	req, _ := http.NewRequest("POST", "/game", gameModelToBytesBuffer(t, newGameRequest))
+	req := newGameRequest(t, "1")
 	router.ServeHTTP(w, req)
 	assert.Equal(t, 200, w.Code)
 
 	w2 := httptest.NewRecorder()	
-	req2, _ := http.NewRequest("POST", "/game", gameModelToBytesBuffer(t, newGameRequest))	
+	req2 := newGameRequest(t, "1")
 	router.ServeHTTP(w2, req2)
 	assert.Equal(t, 400, w2.Code)
 	assert.Equal(t, "\"game exists for user 1\"", w2.Body.String())
@@ -94,10 +88,7 @@ func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 	router := Router()
 
 	w := httptest.NewRecorder()
-	newGameRequest := &model.Game{
-		UserID: "1",
-	}
-	req, _ := http.NewRequest("POST", "/game", gameModelToBytesBuffer(t, newGameRequest))
+	req := newGameRequest(t, "1")
 	router.ServeHTTP(w, req)
 	assert.Equal(t, 200, w.Code)
 
@@ -119,10 +110,51 @@ func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 	guesses := []*model.Guess{guessModel, nil, nil, nil, nil}
 	assert.Equal(t, guesses, returnModel.Guesses)
 	assert.Equal(t, 0, returnModel.GameState)
+	assert.Nil(t, returnModel.Answer)
 
 	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
 		getGameEndpointReturnsExpectedModel(t, "1", router, returnModel)
 	})
+}
+
+func TestGameVictory(t *testing.T) {
+	router := Router()
+
+	w := httptest.NewRecorder()
+	req := newGameRequest(t, "1")
+	router.ServeHTTP(w, req)
+	assert.Equal(t, 200, w.Code)
+	
+	w2 := httptest.NewRecorder()
+	guessRequest := &model.GuessRequest{
+		UserID: "1",
+		Guess: "snack",
+	}
+
+	req2, _ := http.NewRequest("POST", "/guess", guessModelToBytesBuffer(t, guessRequest))
+	router.ServeHTTP(w2, req2)
+	assert.Equal(t, 200, w2.Code)
+	returnModel := responseRecorderToGameModel(t, w2)
+	assert.Equal(t, "1", returnModel.UserID)
+	guessModel := &model.Guess{
+		GuessWord: "snack",
+		LetterStatuses: "22222",
+	}
+	guesses := []*model.Guess{guessModel, nil, nil, nil, nil}
+	assert.Equal(t, guesses, returnModel.Guesses)
+	assert.Equal(t, 2, returnModel.GameState)
+	assert.Equal(t, "snack", returnModel.Answer.Answer)
+	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
+		getGameEndpointReturnsExpectedModel(t, "1", router, returnModel)
+	})
+}
+
+func newGameRequest(t *testing.T, id string) *http.Request {
+	newGameRequest := &model.Game{
+		UserID: "1",
+	}
+	req, _ := http.NewRequest("POST", "/game", gameModelToBytesBuffer(t, newGameRequest))
+	return req
 }
 
 func getGameEndpointReturnsExpectedModel(t *testing.T, id string, router *gin.Engine, expectedReturnModel *model.Game) {

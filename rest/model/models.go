@@ -20,11 +20,12 @@ type Game struct {
 	UserID string `json:"user_id"`
 	Guesses []*Guess `json:"guesses"`
 	GameState int `json:"game_state"`
+	Answer *Answer `json:"answer"`
 }
 
 // Answer contains the answer for a selected game.
-// This has its own endpoint because we do not return the Answer in the regular Game state structure.
-// This will only be returned for completed (won or lost) games.
+// Exists as its own type because it will be placed in Game return model but only if the Game is finished.
+// So it will be nil for games in progress.
 type Answer struct {
 	Answer string `json:"answer"`
 }

@@ -11,20 +11,14 @@ Create a game:
 
 -- GET /game/{id}
 - loads game for the user id from the active game map (DONE)
-- response json{ userId, gameStatus, previousGuesses }
+- response json{ userId, gameStatus, guesses, answer (if finished) }
 
 -- POST /guess
   json{ userId, guessWord } (DONE)
 - find active game for userId (returns error if no active game) (DONE)
 - calls Guess() on game (DONE)
 - assemble response containing representation of game and past guesses (DONE)
-- response json{ userId, gameStatus, guessIndicators, remainingGuesses  }
-
--- GET /answer/{id}
-   gets the answer for game with id. note, the POST guess never returns the target/answer word
-   if the user guessed correctly with the /guess endpoint, the response will already be enough to reveal the word client side
-- if game is not finished, this endpoint returns an error
-- if the game is finished, this endpoint will return the answer to the user to be displayed on the client
+- response json{ userId, gameStatus, guesses, answer (if finished) }
 
 
 not in scope:

@@ -86,11 +86,17 @@ func (g *Game) Target() string {
 }
 
 func (g *Game) ToApiModel(userID string) *model.Game {
-	return &model.Game{
+	game := &model.Game{
 		UserID: userID,
 		Guesses: g.guesses,
 		GameState: int(g.Status),
 	}
+	if g.IsFinished() {
+		game.Answer = &model.Answer{
+			Answer: g.target,	
+		}
+	}
+	return game
 }
 
 func letterStatusesToString(statuses []letterStatus) string {
