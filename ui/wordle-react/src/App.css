@@ -44,13 +44,23 @@ td:after {
   display: block;
   margin-top: 100%;
 }
+
 td .correct-letter {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  background: green;
+  background: #6aaa64;
+}
+
+td .wrong-letter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #787c7e;
 }
 
 td .wrong-location-letter {
@@ -59,7 +69,7 @@ td .wrong-location-letter {
   bottom: 0;
   left: 0;
   right: 0;
-  background: yellow;
+  background: #c9b458;
 }
 
 @keyframes App-logo-spin {
