@@ -18,13 +18,20 @@ function App() {
     .then((data) => console.log(data));
   };
 
-  const handleNewGame= (e) => {
-    e.preventDefault();
-    postNewGame("1");
-  }
+  postNewGame("1");
+
   return (
     <div className="App">
-	<button onClick={handleNewGame}>New Game</button>
+	<h1>Wordle</h1>
+	<table><tbody>
+		<tr><td><div class="correct-letter">a</div></td><td><div class="wrong-location-letter">b</div></td><td></td><td></td><td></td></tr>
+		<tr><td></td><td></td><td></td><td></td><td></td></tr>
+		<tr><td></td><td></td><td></td><td></td><td></td></tr>
+		<tr><td></td><td></td><td></td><td></td><td></td></tr>
+		<tr><td></td><td></td><td></td><td></td><td></td></tr>
+	</tbody></table>
+	<input></input>
+	<button>Guess</button>
     </div>
   );
 }
