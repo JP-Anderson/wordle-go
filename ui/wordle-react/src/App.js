@@ -1,23 +1,30 @@
 import logo from './logo.svg';
 import './App.css';
+import { useState, useEffect } from 'react';
 
 function App() {
+  const id = "1"
+  const postNewGame = async (userId) => {
+    await fetch('http://localhost:8080/game', {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: userId,
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => console.log(data));
+  };
+
+  const handleNewGame= (e) => {
+    e.preventDefault();
+    postNewGame("1");
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+	<button onClick={handleNewGame}>New Game</button>
     </div>
   );
 }
