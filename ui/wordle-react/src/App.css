@@ -45,7 +45,13 @@ td:after {
   margin-top: 100%;
 }
 
-td .correct-letter {
+td .letter {
+  font-size: calc(10px + 8vmin);
+  font-weight: bold;
+  color: white;
+}
+
+td .correct {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -54,7 +60,7 @@ td .correct-letter {
   background: #6aaa64;
 }
 
-td .wrong-letter {
+td .wrong {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -63,7 +69,7 @@ td .wrong-letter {
   background: #787c7e;
 }
 
-td .wrong-location-letter {
+td .misplaced {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -72,11 +78,3 @@ td .wrong-location-letter {
   background: #c9b458;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}

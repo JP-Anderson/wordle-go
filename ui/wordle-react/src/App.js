@@ -24,7 +24,7 @@ function App() {
     <div className="App">
 	<h1>Wordle</h1>
 	<table><tbody>
-		<tr><td><div class="correct-letter">a</div></td><td><div class="wrong-location-letter">b</div></td><td><div class="wrong-letter">e</div></td><td></td><td></td></tr>
+		<tr><td><div class="correct letter">C</div></td><td><div class="wrong letter">R</div></td><td><div class="misplaced letter">A</div></td><td><div class="wrong letter">N</div></td><td><div class="misplaced letter">E</div></td></tr>
 		<tr><td></td><td></td><td></td><td></td><td></td></tr>
 		<tr><td></td><td></td><td></td><td></td><td></td></tr>
 		<tr><td></td><td></td><td></td><td></td><td></td></tr>
