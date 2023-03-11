@@ -13,14 +13,14 @@ beforeEach(() => {
 
 afterEach(() => {
   // cleanup on exiting
-  unmountComponentAtNode(container);
   container.remove();
   container = null;
 });
 
 it("has tr for each array element", () => {
   act(() => {
-     render(<WordleGrid guesses={[null,null,null,null,null]} />, container);
+     const root = createRoot(container)
+     root.render(<WordleGrid guesses={[null,null,null,null,null]} />);
   });
   expect(container.querySelectorAll('tr')).toHaveLength(5);
 });
