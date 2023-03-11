@@ -1,7 +1,11 @@
 export default function WordleRow(props) {
 	return(
 	  <tr>
-	    {Array.from({ length: props.targetLength }, (_, i) => <td key={i}>A</td>)}
+	    {Array.from({ length: props.targetLength }, (_, i) => {
+	      if ( !props.guess ) return <td key={i}></td>;
+	      else return <td key={i}>{props.guess[0][i]}</td>
+	    })
+	    }
 	  </tr>
 	);
 }

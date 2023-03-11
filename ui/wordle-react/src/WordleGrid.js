@@ -6,7 +6,7 @@ export default function WordleGrid(props) {
 	    <tbody>
 	      {props.guesses.map((item, index) => {
 	         return (
-	           <WordleRow key={index} targetLength={props.targetLength} />
+	           <WordleRow key={index} guess={item} targetLength={props.targetLength} />
 	         );
 	      })}
 	    </tbody>	

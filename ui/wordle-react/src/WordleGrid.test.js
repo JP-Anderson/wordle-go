@@ -19,7 +19,7 @@ afterEach(() => {
 
 it("has tr for each array element", () => {
   act(() => {
-     const root = createRoot(container)
+     const root = createRoot(container);
      root.render(<WordleGrid targetLength='5' guesses={[null,null,null,null,null]} />);
   });
   expect(container.querySelectorAll('tr')).toHaveLength(5);
@@ -28,11 +28,25 @@ it("has tr for each array element", () => {
 
 it("has tds for length of word", () => {
   act(() => {
-     const root = createRoot(container)
+     const root = createRoot(container);
      root.render(<WordleGrid targetLength='5' guesses={[null,null,null,null,null]} />);
   });
-  const rows = container.querySelectorAll('tr')
+  const rows = container.querySelectorAll('tr');
   rows.forEach((row) => {
     expect(row.querySelectorAll('td')).toHaveLength(5);
+  });
+});
+
+it("places guess letter in each td", () => {
+  act(() => {
+    const root = createRoot(container);
+    root.render(<WordleGrid targetLength='5' guesses={[["snack", "22222"] ,null,null,null,null]} />);
+  });
+  const rows = container.querySelectorAll('tr');
+  const firstGuess = rows[0];
+  const expectedChars = [ "s", "n", "a", "c", "k"];
+  const tableDatas = firstGuess.querySelectorAll('td');
+  [...tableDatas].map( (item, index) => {
+    expect(item.innerHTML).toBe(expectedChars[index]);
   });
 });
