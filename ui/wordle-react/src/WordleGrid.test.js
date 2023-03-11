@@ -50,3 +50,20 @@ it("places guess letter in each td", () => {
     expect(item.innerHTML).toBe(expectedChars[index]);
   });
 });
+
+it("td gets correct css classes for each letter correctness", () => {
+  act(() => {
+    const root = createRoot(container);
+    root.render(<WordleGrid targetLength='5' guesses={[["crane", "10210"], ["snack", "22222"] ,null,null,null,null]} />);
+  });
+  const rows = container.querySelectorAll('tr');
+  const guess2 = rows[1];
+  const expectedChars2 = [ "s", "n", "a", "c", "k"];
+  const expectedClass = ["correct", "correct", "correct", "correct", "correct"];
+  const tableDatas2 = guess2.querySelectorAll('td');
+  [...tableDatas2].map( (item, index) => {
+    expect(item.innerHTML).toBe(expectedChars2[index]);
+    expect(item).toHaveClass("letter");
+    expect(item).toHaveClass(expectedClass[index]);
+  });
+});
