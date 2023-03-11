@@ -1,14 +1,16 @@
+import WordleRow from './WordleRow';
+
 export default function WordleGrid(props) {
 	return (
 	  <table>
 	    <tbody>
 	      {props.guesses.map((item, index) => {
 	         return (
-	           <tr key={index}>
-	           </tr>
+	           <WordleRow key={index} targetLength={props.targetLength} />
 	         );
 	      })}
 	    </tbody>	
 	  </table>
 	);
 }
+

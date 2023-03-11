@@ -20,7 +20,19 @@ afterEach(() => {
 it("has tr for each array element", () => {
   act(() => {
      const root = createRoot(container)
-     root.render(<WordleGrid guesses={[null,null,null,null,null]} />);
+     root.render(<WordleGrid targetLength='5' guesses={[null,null,null,null,null]} />);
   });
   expect(container.querySelectorAll('tr')).toHaveLength(5);
+});
+
+
+it("has tds for length of word", () => {
+  act(() => {
+     const root = createRoot(container)
+     root.render(<WordleGrid targetLength='5' guesses={[null,null,null,null,null]} />);
+  });
+  const rows = container.querySelectorAll('tr')
+  rows.forEach((row) => {
+    expect(row.querySelectorAll('td')).toHaveLength(5);
+  });
 });
