@@ -3,7 +3,7 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import WordleGrid from './WordleGrid';
 
-async function guess(userID, guessWord) {
+async function postGuess(userID, guessWord) {
   // param is a highlighted word from the user before it clicked the button
   return await fetch("http://localhost:8080/guess", {
     method: 'POST',
@@ -22,11 +22,14 @@ async function guess(userID, guessWord) {
 
 function App({userId}) {
   const [data, setData] = useState({});
-  console.log("App start!");
+  const [guess, setGuess] = useState("");
+
+  const handleGuessInputChange = event => {
+    setGuess(event.target.value);
+  }
+  
   useEffect(() => {
-    console.log("Hit useEffect...");
     const postNewGame = async (id) => {
-      console.log("postNewGame---------------------");
       await fetch('http://localhost:8080/game', {
         method: 'POST',
         body: JSON.stringify({
@@ -44,9 +47,8 @@ function App({userId}) {
   }, []);
 
   const guessOnClick = () => {
-    // todo: get this from input
-    let guessWord = "crane";
-    guess(userId, guessWord).then(result => {
+    let guessWord = guess;
+    postGuess(userId, guessWord).then(result => {
       setData(result);
     });
   };
@@ -55,7 +57,7 @@ function App({userId}) {
     <div className="App">
 	<h1>Wordle</h1>
 	<WordleGrid data={data} />
-	<input></input>
+	<input type="text" id="guessInput" onChange={handleGuessInputChange} value={guess}></input>
 	<button onClick={guessOnClick}>Guess</button>
     </div>
   );
