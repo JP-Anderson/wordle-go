@@ -1,24 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from 'react';
+import { postGame, postGuess } from './wordleRest';
 import WordleGrid from './WordleGrid';
-
-async function postGuess(userID, guessWord) {
-  // param is a highlighted word from the user before it clicked the button
-  return await fetch("http://localhost:8080/guess", {
-    method: 'POST',
-    body: JSON.stringify({
-      user_id: userID,
-      guess: guessWord,
-    }),
-    headers: {
-      'Content-type': 'application/json; charset=UTF-8',
-    },
-  })
-  .then((response) => response.json())
-  .catch((error) => console.log(error))
-}
-
 
 function App({userId}) {
   const [data, setData] = useState({});
@@ -29,21 +13,7 @@ function App({userId}) {
   }
   
   useEffect(() => {
-    const postNewGame = async (id) => {
-      await fetch('http://localhost:8080/game', {
-        method: 'POST',
-        body: JSON.stringify({
-          user_id: id,
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-      })
-      .then((response) => response.json())
-      .then((js) => setData(js))
-      .catch((error) => console.log(error))
-    }
-    postNewGame(userId);
+    postGame(userId, setData);
   }, []);
 
   const guessOnClick = () => {
