@@ -50,32 +50,21 @@ td .letter {
   font-weight: bold;
   color: white;
   position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 td .correct {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background: #6aaa64;
 }
 
-td .wrong {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+td .incorrect {
   background: #787c7e;
 }
 
 td .misplaced {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background: #c9b458;
 }
 
