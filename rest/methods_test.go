@@ -37,6 +37,7 @@ func TestPostGameReturnsNewGame(t *testing.T) {
 	returnModel := responseRecorderToGameModel(t, w)
 	assert.Equal(t, []*model.Guess{ nil, nil, nil, nil, nil }, returnModel.Guesses)
 	assert.Equal(t, 0, returnModel.GameState)
+	assert.Equal(t, 5, returnModel.TargetLength)
 	assert.Nil(t, returnModel.Answer)
 
 	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
@@ -110,6 +111,7 @@ func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 	guesses := []*model.Guess{guessModel, nil, nil, nil, nil}
 	assert.Equal(t, guesses, returnModel.Guesses)
 	assert.Equal(t, 0, returnModel.GameState)
+	assert.Equal(t, 5, returnModel.TargetLength)
 	assert.Nil(t, returnModel.Answer)
 
 	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
@@ -143,6 +145,7 @@ func TestGameVictory(t *testing.T) {
 	guesses := []*model.Guess{guessModel, nil, nil, nil, nil}
 	assert.Equal(t, guesses, returnModel.Guesses)
 	assert.Equal(t, 2, returnModel.GameState)
+	assert.Equal(t, 5, returnModel.TargetLength)
 	assert.Equal(t, "snack", returnModel.Answer.Answer)
 	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
 		getGameEndpointReturnsExpectedModel(t, "1", router, returnModel)

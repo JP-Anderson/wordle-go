@@ -90,6 +90,7 @@ func (g *Game) ToApiModel(userID string) *model.Game {
 		UserID: userID,
 		Guesses: g.guesses,
 		GameState: int(g.Status),
+		TargetLength: len(g.target),
 	}
 	if g.IsFinished() {
 		game.Answer = &model.Answer{

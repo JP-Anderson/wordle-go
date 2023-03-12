@@ -21,6 +21,7 @@ type Game struct {
 	Guesses []*Guess `json:"guesses"`
 	GameState int `json:"game_state"`
 	Answer *Answer `json:"answer"`
+	TargetLength int `json:"target_length"`
 }
 
 // Answer contains the answer for a selected game.

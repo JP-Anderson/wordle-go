@@ -1,4 +1,5 @@
 export default function WordleRow(props) {
+	console.log(props);
 	return(
 	  <tr>
 	    {Array.from({ length: props.targetLength }, (_, i) => {

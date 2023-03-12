@@ -8,7 +8,7 @@ export default function WordleGrid(props) {
 	    <tbody>
 	      {props.data.guesses.map((item, index) => {
 	         return (
-	           <WordleRow key={index} guess={item} targetLength={props.data.targetLength} />
+	           <WordleRow key={index} guess={item} targetLength={props.data.target_length} />
 	         );
 	      })}
 	    </tbody>	
