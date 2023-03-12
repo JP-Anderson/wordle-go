@@ -1,8 +1,12 @@
-Wordle clone developed as a first React project
+Wordle clone developed as a first React project.
+
+Project consists of:
+- HTTP Rest API (Golang/Gin) which generates and orchestrates games of Wordle.
+- Web App (Javascript/React) which interacts with Rest API to play Wordle games.
 
 ## How to play
 
-### Deploy go server locally
+### Deploy HTTP server locally
 
 `> go run main.go`
 
