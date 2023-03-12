@@ -6,23 +6,23 @@ import WordleGrid from './WordleGrid';
 function App({userId}) {
   const [data, setData] = useState({});
   console.log("App start!");
-  const postNewGame = async (id) => {
-    console.log("postNewGame---------------------");
-    await fetch('http://localhost:8080/game', {
-      method: 'POST',
-      body: JSON.stringify({
-        user_id: id,
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-    .then((response) => response.json())
-    .then((js) => setData(js))
-    .catch((error) => console.log(error))
-  }
   useEffect(() => {
     console.log("Hit useEffect...");
+    const postNewGame = async (id) => {
+      console.log("postNewGame---------------------");
+      await fetch('http://localhost:8080/game', {
+        method: 'POST',
+        body: JSON.stringify({
+          user_id: id,
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+      .then((response) => response.json())
+      .then((js) => setData(js))
+      .catch((error) => console.log(error))
+    }
     postNewGame(userId);
   }, []);
 
