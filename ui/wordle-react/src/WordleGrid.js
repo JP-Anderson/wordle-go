@@ -4,7 +4,7 @@ export default function WordleGrid(props) {
 	console.log(props);
 	if ( props.data.guesses === undefined ) return <p>Loading...</p>;
 	return (
-	  <table>
+	  <div className="wordle-container"><table>
 	    <tbody>
 	      {props.data.guesses.map((item, index) => {
 	         return (
@@ -12,6 +12,6 @@ export default function WordleGrid(props) {
 	         );
 	      })}
 	    </tbody>	
-	  </table>
+	  </table></div>
 	);
 }

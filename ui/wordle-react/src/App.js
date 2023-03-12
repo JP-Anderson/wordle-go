@@ -55,7 +55,6 @@ function App({userId}) {
 
   return (
     <div className="App">
-	<h1>Wordle</h1>
 	<WordleGrid data={data} />
 	<input type="text" id="guessInput" onChange={handleGuessInputChange} value={guess}></input>
 	<button onClick={guessOnClick}>Guess</button>
