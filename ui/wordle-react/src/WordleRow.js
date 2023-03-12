@@ -3,8 +3,8 @@ export default function WordleRow(props) {
 	return(
 	  <tr>
 	    {Array.from({ length: props.targetLength }, (_, i) => {
-	      if ( !props.guess ) return <td key={i}></td>;
-	      else return <td class={statusIntToClasses[props.guess[1][i]]} key={i}>{props.guess[0][i]}</td>
+	      if ( !props.guess ) return <td key={i}><div className="letter"></div></td>;
+	      else return <td key={i}><div className={statusIntToClasses[props.guess.letter_statuses[i]]}>{props.guess.guess_word[i]}</div></td>
 	    })
 	    }
 	  </tr>

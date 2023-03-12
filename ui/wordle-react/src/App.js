@@ -3,6 +3,23 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import WordleGrid from './WordleGrid';
 
+async function guess(userID, guessWord) {
+  // param is a highlighted word from the user before it clicked the button
+  return await fetch("http://localhost:8080/guess", {
+    method: 'POST',
+    body: JSON.stringify({
+      user_id: userID,
+      guess: guessWord,
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  })
+  .then((response) => response.json())
+  .catch((error) => console.log(error))
+}
+
+
 function App({userId}) {
   const [data, setData] = useState({});
   console.log("App start!");
@@ -26,19 +43,20 @@ function App({userId}) {
     postNewGame(userId);
   }, []);
 
+  const guessOnClick = () => {
+    // todo: get this from input
+    let guessWord = "crane";
+    guess(userId, guessWord).then(result => {
+      setData(result);
+    });
+  };
+
   return (
     <div className="App">
 	<h1>Wordle</h1>
 	<WordleGrid data={data} />
-	<table><tbody>
-		<tr><td><div class="correct letter">C</div></td><td><div class="wrong letter">R</div></td><td><div class="misplaced letter">A</div></td><td><div class="wrong letter">N</div></td><td><div class="misplaced letter">E</div></td></tr>
-		<tr><td></td><td></td><td></td><td></td><td></td></tr>
-		<tr><td></td><td></td><td></td><td></td><td></td></tr>
-		<tr><td></td><td></td><td></td><td></td><td></td></tr>
-		<tr><td></td><td></td><td></td><td></td><td></td></tr>
-	</tbody></table>
 	<input></input>
-	<button>Guess</button>
+	<button onClick={guessOnClick}>Guess</button>
     </div>
   );
 }
