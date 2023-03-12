@@ -1,16 +1,17 @@
 import WordleRow from './WordleRow';
-
+import { useEffect } from 'react';
 export default function WordleGrid(props) {
+	console.log(props);
+	if ( props.data.guesses === undefined ) return <p>Loading...</p>;
 	return (
 	  <table>
 	    <tbody>
-	      {props.guesses.map((item, index) => {
+	      {props.data.guesses.map((item, index) => {
 	         return (
-	           <WordleRow key={index} guess={item} targetLength={props.targetLength} />
+	           <WordleRow key={index} guess={item} targetLength={props.data.targetLength} />
 	         );
 	      })}
 	    </tbody>	
 	  </table>
 	);
 }
-
