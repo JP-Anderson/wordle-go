@@ -6,16 +6,19 @@ import (
 	"wordle/engine"
 	"wordle/rest/model"
 	"wordle/rest/middleware"
+	"wordle/words"
 	"github.com/gin-gonic/gin"
 )
 
 var games map[string]*engine.Game
+var wl words.WordsList
 
 //todo: move this to engine somewhere?
 const defaultGuesses = 5
 
 func Router() *gin.Engine {
 	games = make(map[string]*engine.Game)
+	wl = words.WordsListFromFile("words/dic.txt")
 	r := gin.Default()
 	r.Use(middleware.CORS())
 	r.POST("/game", postGame)
@@ -23,6 +26,10 @@ func Router() *gin.Engine {
 	r.POST("/guess", postGuess)
 	r.GET("/health", getHealth)
 	return r
+}
+
+var NewWord = func () string {
+	return wl.NextWord()
 }
 
 func postGame(c *gin.Context) {
@@ -39,7 +46,7 @@ func postGame(c *gin.Context) {
 	}
 	
 	// todo: add word list to this module and get random word
-	createdGame := engine.New("snack", defaultGuesses)
+	createdGame := engine.New(NewWord(), defaultGuesses)
 	games[id] = createdGame
 	c.IndentedJSON(http.StatusOK, createdGame.ToApiModel(id))
 }

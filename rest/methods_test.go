@@ -14,6 +14,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func stubNextWordleWordFunc(target string) {
+	NewWord = func() string {
+		return target
+	}
+}
+
 func TestHealthRoute(t *testing.T) {
 	router := Router()
 
@@ -26,8 +32,9 @@ func TestHealthRoute(t *testing.T) {
 }
 
 func TestPostGameReturnsNewGame(t *testing.T) {
-	router := Router()
-	
+	router := Router()	
+	stubNextWordleWordFunc("snack")
+
 	w := httptest.NewRecorder()
 	req := newGameRequest(t, "1")
 	router.ServeHTTP(w, req)
@@ -47,7 +54,8 @@ func TestPostGameReturnsNewGame(t *testing.T) {
 
 func TestPostGameReturnsErrorWhenGameExistsForUserID(t *testing.T) {
 	router := Router()
-	
+	stubNextWordleWordFunc("snack")
+
 	w := httptest.NewRecorder()
 	req := newGameRequest(t, "1")
 	router.ServeHTTP(w, req)
@@ -62,6 +70,7 @@ func TestPostGameReturnsErrorWhenGameExistsForUserID(t *testing.T) {
 
 func TestGetGameReturns404WithNoGameForUserID(t *testing.T) {
 	router := Router()
+	stubNextWordleWordFunc("snack")
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/game/missing-user", nil)
@@ -72,7 +81,8 @@ func TestGetGameReturns404WithNoGameForUserID(t *testing.T) {
 
 func TestPostGuessReturnsErrorWithNoGameForUserID(t *testing.T) {
 	router := Router()
-	
+	stubNextWordleWordFunc("snack")
+
 	w := httptest.NewRecorder()
 	guessRequest := &model.GuessRequest{
 		UserID: "id-with-no-game",
@@ -87,6 +97,7 @@ func TestPostGuessReturnsErrorWithNoGameForUserID(t *testing.T) {
 
 func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 	router := Router()
+	stubNextWordleWordFunc("snack")
 
 	w := httptest.NewRecorder()
 	req := newGameRequest(t, "1")
@@ -121,6 +132,7 @@ func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 
 func TestGameVictory(t *testing.T) {
 	router := Router()
+	stubNextWordleWordFunc("snack")
 
 	w := httptest.NewRecorder()
 	req := newGameRequest(t, "1")
