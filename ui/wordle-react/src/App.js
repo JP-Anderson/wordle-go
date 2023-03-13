@@ -13,15 +13,23 @@ function App({userId}) {
   const handleGuessInputChange = event => {
     setGuess(event.target.value);
   }
+
+  const handleWordleApiResponse = (data) => {
+    console.log("Wordle response: " + data);
+    setData(data)
+    if (data.game_state === 1 || data.game_state === 2) {
+      setModalOpen(true);
+    }
+  }
   
   useEffect(() => {
-    postGame(userId, setData);
+    postGame(userId, handleWordleApiResponse);
   }, []);
 
   const guessOnClick = () => {
     let guessWord = guess;
     postGuess(userId, guessWord).then(result => {
-      setData(result);
+      handleWordleApiResponse(result);
     });
   };
 
