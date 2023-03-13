@@ -68,7 +68,7 @@ func postGuess(c *gin.Context) {
 	if err := c.BindJSON(&newGuess); err !=  nil {
 		return
 	}
-
+	
 	id := newGuess.UserID
 	var game *engine.Game
 	var ok bool
@@ -76,8 +76,17 @@ func postGuess(c *gin.Context) {
 		c.IndentedJSON(http.StatusNotFound, fmt.Sprintf("game does not exist for user %s", id))
 		return
 	}
+	
+	if len(newGuess.Guess) != len(game.Target()) {
+		errorMsg := fmt.Sprintf(
+			"guess must be same length as target word (%d), was %d",
+			len(game.Target()),
+			len(newGuess.Guess),
+		)
+		c.IndentedJSON(http.StatusBadRequest, errorMsg)
+		return
+	}
 
-	// TODO check game is finished first (will not do this until guess functionality is finished so we can test game is finished)
 	game.Guess(newGuess.Guess)
 	c.IndentedJSON(http.StatusOK, game.ToApiModel(id))
 }

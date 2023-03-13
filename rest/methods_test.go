@@ -95,6 +95,38 @@ func TestPostGuessReturnsErrorWithNoGameForUserID(t *testing.T) {
 	assert.Equal(t, "\"game does not exist for user id-with-no-game\"", w.Body.String())
 }
 
+func TestPostGuessReturnsErrorWithGuessesOfIncorrectLength(t *testing.T) {
+	router := Router()
+	stubNextWordleWordFunc("snack")
+
+	w := httptest.NewRecorder()
+	req := newGameRequest(t, "1")
+	router.ServeHTTP(w, req)
+	assert.Equal(t, 200, w.Code)
+	
+	w2 := httptest.NewRecorder()
+	guessRequest := &model.GuessRequest{
+		UserID: "1",
+		Guess: "eren",	
+	}
+
+	req2, _ := http.NewRequest("POST", "/guess", guessModelToBytesBuffer(t, guessRequest))
+	router.ServeHTTP(w2, req2)
+	assert.Equal(t, 400, w2.Code)
+	assert.Equal(t, "\"guess must be same length as target word (5), was 4\"", w2.Body.String())
+
+	w3 := httptest.NewRecorder()
+	guessRequest2 := &model.GuessRequest{
+		UserID: "1",
+		Guess: "cranes",	
+	}
+
+	req3, _ := http.NewRequest("POST", "/guess", guessModelToBytesBuffer(t, guessRequest2))
+	router.ServeHTTP(w3, req3)
+	assert.Equal(t, 400, w3.Code)
+	assert.Equal(t, "\"guess must be same length as target word (5), was 6\"", w3.Body.String())
+}
+
 func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 	router := Router()
 	stubNextWordleWordFunc("snack")
