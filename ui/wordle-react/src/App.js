@@ -14,23 +14,21 @@ function App({userId}) {
     setGuess(event.target.value);
   }
 
-  const handleWordleApiResponse = (data) => {
-    console.log("Wordle response: " + data);
-    setData(data)
-    if (data.game_state === 1 || data.game_state === 2) {
+  const handleWordleApiResponse = (response) => {
+    console.log("Wordle response: " + response);
+    setData(response)
+    if (response.game_state === 1 || response.game_state === 2) {
       setModalOpen(true);
     }
   }
   
   useEffect(() => {
-    postGame(userId, handleWordleApiResponse);
+    postGame(userId).then((response) => handleWordleApiResponse(response));
   }, []);
 
   const guessOnClick = () => {
     let guessWord = guess;
-    postGuess(userId, guessWord).then(result => {
-      handleWordleApiResponse(result);
-    });
+    postGuess(userId, guessWord).then((response) => handleWordleApiResponse(response));
   };
 
   return (
