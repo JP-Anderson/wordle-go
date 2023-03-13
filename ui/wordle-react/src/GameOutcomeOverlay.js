@@ -1,3 +1,5 @@
+import refreshPage from './refresh.js';
+
 export default function GameOutcomeOverlay(props) {
 	console.log(props);
 	if (props.isOpen) {
@@ -8,7 +10,7 @@ export default function GameOutcomeOverlay(props) {
 		    <div className="modal-content">
 		      <h3>Game finished</h3>
 		        <span>{message}</span>
-		      <button>New game</button>
+		      <button onClick={refreshPage}>New game</button>
 		    </div>
 		  </div>
 		)
