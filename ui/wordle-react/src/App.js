@@ -35,7 +35,7 @@ function App({userId}) {
 
   return (
     <div className="App">
-        {modalOpen && <GameOutcomeOverlay isOpen={modalOpen} />}
+        {modalOpen && <GameOutcomeOverlay isOpen={modalOpen} data={data} />}
 	<WordleGrid data={data} />
 	<input type="text" id="guessInput" onChange={handleGuessInputChange} value={guess}></input>
 	<button onClick={guessOnClick}>Guess</button>
