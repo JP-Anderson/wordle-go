@@ -35,11 +35,11 @@ function App({userId}) {
 
   return (
     <div className="App">
+        {modalOpen && <GameOutcomeOverlay isOpen={modalOpen} />}
 	<WordleGrid data={data} />
 	<input type="text" id="guessInput" onChange={handleGuessInputChange} value={guess}></input>
 	<button onClick={guessOnClick}>Guess</button>
 	<button onClick={() => setModalOpen(true)}>TEST MODAL</button>
-	{modalOpen && <GameOutcomeOverlay isOpen={modalOpen} />}
     </div>
   );
 }
