@@ -15,7 +15,9 @@ function App({userId}) {
   }
 
   const handleWordleApiResponse = (response) => {
-    console.log("Wordle response: " + response);
+    if ( response === undefined || response.skip !== undefined && response.skip ) {
+      return;
+    }
     setData(response)
     if (response.game_state === 1 || response.game_state === 2) {
       setModalOpen(true);

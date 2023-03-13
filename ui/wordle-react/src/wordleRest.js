@@ -9,11 +9,13 @@ const gameEndpoint = '/game';
 const guessEndpoint = '/guess';
 
 function handleResponse(response) {
-  if (!response.ok) {
+  if (response === undefined) {
+    return { skip: true};
+  } else if (!response.ok) {
     console.log(response);
-  } else {
-    return response.json();
+    return { skip: true };
   }
+  return response.json()
 }
 
 async function postGame (id) {
@@ -36,7 +38,7 @@ async function postGame (id) {
         return getGame(id);
       }
     }
-    else handleResponse(response);
+    return handleResponse(response);
   });
 }
 
