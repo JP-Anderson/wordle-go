@@ -40,12 +40,13 @@ func postGame(c *gin.Context) {
 	}
 
 	id := newGame.UserID
-	if _, ok := games[id]; ok {
-		c.IndentedJSON(http.StatusBadRequest, fmt.Sprintf("game exists for user %s", id))
-		return
+	if existingGame, ok := games[id]; ok {
+		if !existingGame.IsFinished() {
+			c.IndentedJSON(http.StatusBadRequest, fmt.Sprintf("game exists for user %s", id))
+			return
+		}
 	}
 	
-	// todo: add word list to this module and get random word
 	createdGame := engine.New(NewWord(), defaultGuesses)
 	games[id] = createdGame
 	c.IndentedJSON(http.StatusOK, createdGame.ToApiModel(id))

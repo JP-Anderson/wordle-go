@@ -164,6 +164,47 @@ func TestGameVictory(t *testing.T) {
 	})
 }
 
+func TestPostGameToFinishedGameReturnsNewGame(t *testing.T) {
+	router := Router()
+	stubNextWordleWordFunc("snack")
+
+	w := httptest.NewRecorder()
+	req := newGameRequest(t, "1")
+	router.ServeHTTP(w, req)
+	assert.Equal(t, 200, w.Code)
+
+	w2 := httptest.NewRecorder()
+	guessRequest := &model.GuessRequest{
+		UserID: "1",
+		Guess: "snack",
+	}
+
+	req2, _ := http.NewRequest("POST", "/guess", guessModelToBytesBuffer(t, guessRequest))
+	router.ServeHTTP(w2, req2)
+	assert.Equal(t, 200, w2.Code)
+	returnModel := responseRecorderToGameModel(t, w2)
+	assert.Equal(t, 2, returnModel.GameState)
+	assert.Equal(t, "1", returnModel.UserID)
+	assert.NotNil(t, returnModel.Answer)
+	guessModel := &model.Guess{
+		GuessWord: "snack",
+		LetterStatuses: "22222",
+	}
+	guesses := []*model.Guess{guessModel, nil, nil, nil, nil}
+	assert.Equal(t, guesses, returnModel.Guesses)
+	
+	w3 := httptest.NewRecorder()
+	req3 := newGameRequest(t, "1")
+	router.ServeHTTP(w3, req3)
+	assert.Equal(t, 200, w.Code)
+	
+	returnModel2 := responseRecorderToGameModel(t, w3)
+	assert.Equal(t, []*model.Guess{ nil, nil, nil, nil, nil }, returnModel2.Guesses)
+	assert.Equal(t, "1", returnModel2.UserID)
+	assert.Equal(t, 0, returnModel2.GameState)
+	assert.Nil(t, returnModel2.Answer)
+}
+
 func newGameRequest(t *testing.T, id string) *http.Request {
 	newGameRequest := &model.Game{
 		UserID: "1",
