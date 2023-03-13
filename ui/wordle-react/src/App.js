@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from 'react';
 import { postGame, postGuess } from './wordleRest';
@@ -15,7 +14,7 @@ function App({userId}) {
   }
 
   const handleWordleApiResponse = (response) => {
-    if ( response === undefined || response.skip !== undefined && response.skip ) {
+    if ( response === undefined || (response.skip !== undefined && response.skip) ) {
       return;
     }
     setData(response)
@@ -26,7 +25,7 @@ function App({userId}) {
   
   useEffect(() => {
     postGame(userId).then((response) => handleWordleApiResponse(response));
-  }, []);
+  }, [userId]);
 
   const guessOnClick = () => {
     let guessWord = guess;
