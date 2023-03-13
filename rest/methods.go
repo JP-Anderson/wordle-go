@@ -13,9 +13,6 @@ import (
 var games map[string]*engine.Game
 var wl words.WordsList
 
-//todo: move this to engine somewhere?
-const defaultGuesses = 5
-
 func Router() *gin.Engine {
 	games = make(map[string]*engine.Game)
 	wl = words.WordsListFromFile("words/dic.txt")
@@ -47,7 +44,7 @@ func postGame(c *gin.Context) {
 		}
 	}
 	
-	createdGame := engine.New(NewWord(), defaultGuesses)
+	createdGame := engine.NewWithDefaultGuesses(NewWord())
 	games[id] = createdGame
 	c.IndentedJSON(http.StatusOK, createdGame.ToApiModel(id))
 }

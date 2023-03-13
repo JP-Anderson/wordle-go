@@ -42,7 +42,7 @@ func TestPostGameReturnsNewGame(t *testing.T) {
 	assert.Equal(t, 200, w.Code)
 
 	returnModel := responseRecorderToGameModel(t, w)
-	assert.Equal(t, []*model.Guess{ nil, nil, nil, nil, nil }, returnModel.Guesses)
+	assert.Equal(t, []*model.Guess{ nil, nil, nil, nil, nil, nil }, returnModel.Guesses)
 	assert.Equal(t, 0, returnModel.GameState)
 	assert.Equal(t, 5, returnModel.TargetLength)
 	assert.Nil(t, returnModel.Answer)
@@ -119,7 +119,7 @@ func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 		GuessWord: "crane",
 		LetterStatuses: "10210",
 	}
-	guesses := []*model.Guess{guessModel, nil, nil, nil, nil}
+	guesses := []*model.Guess{guessModel, nil, nil, nil, nil, nil}
 	assert.Equal(t, guesses, returnModel.Guesses)
 	assert.Equal(t, 0, returnModel.GameState)
 	assert.Equal(t, 5, returnModel.TargetLength)
@@ -154,7 +154,7 @@ func TestGameVictory(t *testing.T) {
 		GuessWord: "snack",
 		LetterStatuses: "22222",
 	}
-	guesses := []*model.Guess{guessModel, nil, nil, nil, nil}
+	guesses := []*model.Guess{guessModel, nil, nil, nil, nil, nil}
 	assert.Equal(t, guesses, returnModel.Guesses)
 	assert.Equal(t, 2, returnModel.GameState)
 	assert.Equal(t, 5, returnModel.TargetLength)
@@ -190,7 +190,7 @@ func TestPostGameToFinishedGameReturnsNewGame(t *testing.T) {
 		GuessWord: "snack",
 		LetterStatuses: "22222",
 	}
-	guesses := []*model.Guess{guessModel, nil, nil, nil, nil}
+	guesses := []*model.Guess{guessModel, nil, nil, nil, nil, nil}
 	assert.Equal(t, guesses, returnModel.Guesses)
 	
 	w3 := httptest.NewRecorder()
@@ -199,7 +199,7 @@ func TestPostGameToFinishedGameReturnsNewGame(t *testing.T) {
 	assert.Equal(t, 200, w.Code)
 	
 	returnModel2 := responseRecorderToGameModel(t, w3)
-	assert.Equal(t, []*model.Guess{ nil, nil, nil, nil, nil }, returnModel2.Guesses)
+	assert.Equal(t, []*model.Guess{ nil, nil, nil, nil, nil, nil }, returnModel2.Guesses)
 	assert.Equal(t, "1", returnModel2.UserID)
 	assert.Equal(t, 0, returnModel2.GameState)
 	assert.Nil(t, returnModel2.Answer)

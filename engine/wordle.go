@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+const DefaultGuesses = 6
+
 func init() {
 	rand.Seed(time.Now().Unix())
 }
@@ -17,6 +19,10 @@ type Game struct {
 	letterDic map[rune]bool
 	guesses []*model.Guess
 	Status GameStatus
+}
+
+func NewWithDefaultGuesses(target string) *Game {
+	return New(target, DefaultGuesses)
 }
 
 func New(target string, guesses int) *Game {
