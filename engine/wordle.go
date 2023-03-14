@@ -26,6 +26,7 @@ func NewWithDefaultGuesses(target string) *Game {
 }
 
 func New(target string, guesses int) *Game {
+	target = strings.ToUpper(target)
 	dict := map[rune]bool{}
 	for _, r := range target {
 		dict[r] = true
@@ -61,6 +62,7 @@ func (g *Game) Guess(guess string) []letterStatus {
 	if g.Status != GameInProgress {
 		return nil
 	}
+	guess = strings.ToUpper(guess)
 	result := make([]letterStatus, len(g.target))
 	for i, ch := range g.target {
 		if ch == rune(guess[i]) {

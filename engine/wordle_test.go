@@ -2,6 +2,7 @@ package engine
 
 import (
 	"testing"
+	"strings"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -10,7 +11,7 @@ const defaultGuesses = 5
 
 func TestNewWordlePicksTargetWord(t *testing.T) {
 	game := New("shark", defaultGuesses)
-	assert.Equal(t, "shark", game.target)
+	assert.Equal(t, "SHARK", game.target)
 }
 
 func TestFailingAGame(t *testing.T) {
@@ -41,11 +42,11 @@ func TestWinningAGame(t *testing.T) {
 		game := New("chess", defaultGuesses)
 		for i := 0; i < turnNum-1; i++ {
 			game.Guess(wrongGuesses[i])
-			assert.Equal(t, wrongGuesses[i], game.guesses[i].GuessWord)
+			assert.Equal(t, strings.ToUpper(wrongGuesses[i]), game.guesses[i].GuessWord)
 			assert.Equal(t, statusStrings[i], game.guesses[i].LetterStatuses)	
 		}
 		game.Guess("chess")
-		assert.Equal(t, "chess", game.guesses[turnNum-1].GuessWord)
+		assert.Equal(t, "CHESS", game.guesses[turnNum-1].GuessWord)
 		assert.Equal(t, "22222", game.guesses[turnNum-1].LetterStatuses)
 		assert.True(t, game.IsFinished())
 		assert.Equal(t, GameWon, game.Status)
@@ -64,20 +65,20 @@ func TestGuess(t *testing.T) {
 	cases := []testCase{
 		{
 			"correct letter",
-			"crane",
-			"clock",
+			"CRANE",
+			"CLOCK",
 			[]letterStatus{LetterAndPositionCorrect, LetterIncorrect, LetterIncorrect, LetterCorrectPositionIncorrect, LetterIncorrect},
 		},
 		{
 			"incorrect letter",
 			"shark",
-			"shirk",
+			"SHIRK",
 			[]letterStatus{LetterAndPositionCorrect, LetterAndPositionCorrect, LetterIncorrect, LetterAndPositionCorrect, LetterAndPositionCorrect},	
 		},
 		{
 			"letter correct but wrong place",
 			"crane",
-			"pluck",
+			"PLUCK",
 			[]letterStatus{LetterIncorrect, LetterIncorrect, LetterIncorrect, LetterCorrectPositionIncorrect, LetterIncorrect},
 		},
 	}

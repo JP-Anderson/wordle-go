@@ -127,6 +127,59 @@ func TestPostGuessReturnsErrorWithGuessesOfIncorrectLength(t *testing.T) {
 	assert.Equal(t, "\"guess must be same length as target word (5), was 6\"", w3.Body.String())
 }
 
+func TestGuessesAlwaysReturnedAsCaps(t *testing.T) {
+	router := Router()
+	stubNextWordleWordFunc("snack")
+
+	w := httptest.NewRecorder()
+	req := newGameRequest(t, "1")
+	router.ServeHTTP(w, req)
+	assert.Equal(t, 200, w.Code)
+
+	w2 := httptest.NewRecorder()
+	guessRequestLowerCase := &model.GuessRequest{
+		UserID: "1",
+		Guess: "crane",
+	}
+
+	req2, _ := http.NewRequest("POST", "/guess", guessModelToBytesBuffer(t, guessRequestLowerCase))
+	router.ServeHTTP(w2, req2)
+	assert.Equal(t, 200, w2.Code)
+	returnModel := responseRecorderToGameModel(t, w2)
+	assert.Equal(t, "1", returnModel.UserID)
+	guessModel := &model.Guess{
+		GuessWord: "CRANE",
+		LetterStatuses: "10210",
+	}
+	guesses := []*model.Guess{guessModel, nil, nil, nil, nil, nil}
+	assert.Equal(t, guesses, returnModel.Guesses)
+	assert.Equal(t, 0, returnModel.GameState)
+	assert.Equal(t, 5, returnModel.TargetLength)
+	assert.Nil(t, returnModel.Answer)
+
+	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
+		getGameEndpointReturnsExpectedModel(t, "1", router, returnModel)
+	})
+	
+	w3 := httptest.NewRecorder()
+	guessRequestUpperCase := &model.GuessRequest{
+		UserID: "1",
+		Guess: "CRANE",
+	}
+
+	req3, _ := http.NewRequest("POST", "/guess", guessModelToBytesBuffer(t, guessRequestUpperCase))
+	router.ServeHTTP(w3, req3)
+	assert.Equal(t, 200, w3.Code)
+	returnModel2 := responseRecorderToGameModel(t, w3)
+	assert.Equal(t, "1", returnModel2.UserID)
+	guesses2 := []*model.Guess{guessModel, guessModel, nil, nil, nil, nil}
+	assert.Equal(t, guesses2, returnModel2.Guesses)
+
+	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
+		getGameEndpointReturnsExpectedModel(t, "1", router, returnModel2)
+	})
+}
+
 func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 	router := Router()
 	stubNextWordleWordFunc("snack")
@@ -148,7 +201,7 @@ func TestPostGuessReturnsGameStateWithGuessStatus(t *testing.T) {
 	returnModel := responseRecorderToGameModel(t, w2)
 	assert.Equal(t, "1", returnModel.UserID)
 	guessModel := &model.Guess{
-		GuessWord: "crane",
+		GuessWord: "CRANE",
 		LetterStatuses: "10210",
 	}
 	guesses := []*model.Guess{guessModel, nil, nil, nil, nil, nil}
@@ -183,14 +236,14 @@ func TestGameVictory(t *testing.T) {
 	returnModel := responseRecorderToGameModel(t, w2)
 	assert.Equal(t, "1", returnModel.UserID)
 	guessModel := &model.Guess{
-		GuessWord: "snack",
+		GuessWord: "SNACK",
 		LetterStatuses: "22222",
 	}
 	guesses := []*model.Guess{guessModel, nil, nil, nil, nil, nil}
 	assert.Equal(t, guesses, returnModel.Guesses)
 	assert.Equal(t, 2, returnModel.GameState)
 	assert.Equal(t, 5, returnModel.TargetLength)
-	assert.Equal(t, "snack", returnModel.Answer.Answer)
+	assert.Equal(t, "SNACK", returnModel.Answer.Answer)
 	t.Run("AndGetGameReturnsIdentical", func (t *testing.T) {
 		getGameEndpointReturnsExpectedModel(t, "1", router, returnModel)
 	})
@@ -219,7 +272,7 @@ func TestPostGameToFinishedGameReturnsNewGame(t *testing.T) {
 	assert.Equal(t, "1", returnModel.UserID)
 	assert.NotNil(t, returnModel.Answer)
 	guessModel := &model.Guess{
-		GuessWord: "snack",
+		GuessWord: "SNACK",
 		LetterStatuses: "22222",
 	}
 	guesses := []*model.Guess{guessModel, nil, nil, nil, nil, nil}
