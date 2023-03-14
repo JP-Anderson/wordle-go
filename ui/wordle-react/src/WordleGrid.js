@@ -1,6 +1,4 @@
 import WordleRow from './WordleRow';
-import { buffer } from './keyPress';
-import { useEffect } from 'react';
 
 export default function WordleGrid(props) {
 	console.log(props);
@@ -10,8 +8,9 @@ export default function WordleGrid(props) {
 	  <div className="wordle-container"><table>
 	    <tbody>
 	      {props.data.guesses.map((item, index) => {
-	         return (
-	           <WordleRow key={index} buffer={buffer} guess={item} targetLength={props.data.target_length} isGuessingRow={firstEmptyIndex === index}/>
+	        const isGuessingRow = firstEmptyIndex === index;   
+	        return (
+	           <WordleRow key={index} guess={item} targetLength={props.data.target_length} isGuessingRow={isGuessingRow} buffer={props.buffer} />
 	         );
 	      })}
 	    </tbody>	

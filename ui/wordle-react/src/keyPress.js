@@ -1,8 +1,12 @@
-export let buffer = "";
-
+let buffer = "";
 let bufferLim = 5;
 
 let enterEventFunction = function () {};
+let propsCallBackFunction = function () {};
+
+export function setEventToPropsCB(f) {
+	propsCallBackFunction = f;
+}
 
 export function setEnterEventFunction(f) {
 	enterEventFunction = f;
@@ -15,14 +19,16 @@ export function onKeyPress(event) {
 	if (event.keyCode === 8) {
 		if (buffer.length > 0) {
 			buffer = buffer.slice(0, buffer.length-1);
+			propsCallBackFunction(buffer);
 		}
 	}
 	// ENTER
 	else if (event.keyCode === 13) {
 		console.log("enter");
-		if ( buffer.length == bufferLim) {
+		if ( buffer.length === bufferLim) {
 			let guess = buffer;
 			buffer = "";
+			propsCallBackFunction(buffer);
 			enterEventFunction(guess);
 		}
 	}
@@ -30,6 +36,7 @@ export function onKeyPress(event) {
 	else if (event.keyCode in keys) {
 		if (buffer.length < bufferLim) {
 			buffer = buffer + keys[event.keyCode]
+			propsCallBackFunction(buffer);
 		}
 	}
 	console.log(buffer);
