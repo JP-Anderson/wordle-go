@@ -1,8 +1,8 @@
-let buffer = "";
+export let buffer = "";
 
 let bufferLim = 5;
 
-export default function onKeyPress(event) {
+export function onKeyPress(event) {
 	event = event || window.event;
 	console.log(keys);
 	if (event.keyCode === 8) {

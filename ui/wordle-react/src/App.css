@@ -75,6 +75,10 @@ td .misplaced {
   background: #c9b458;
 }
 
+td .active-guessing-row {
+  color: black;
+}
+
 .modal {
   position: fixed;
   z-index: 1;

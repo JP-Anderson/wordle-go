@@ -3,14 +3,12 @@ import { useState, useEffect } from 'react';
 import { postGame, postGuess } from './wordleRest';
 import WordleGrid from './WordleGrid';
 import GameOutcomeOverlay from './GameOutcomeOverlay';
-import onKeyPress from './keyPress';
+import {onKeyPress} from './keyPress';
 
 function App({userId}) {
   const [data, setData] = useState({});
   const [guess, setGuess] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  
-  let buffer = "";
   document.onkeydown = onKeyPress;
   
   const handleGuessInputChange = event => {
