@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { postGame, postGuess } from './wordleRest';
 import WordleGrid from './WordleGrid';
 import GameOutcomeOverlay from './GameOutcomeOverlay';
-import { setEventToPropsCB, setEnterEventFunction,  onKeyPress } from './keyPress';
+import { setEventToPropsCB, setEnterEventFunction } from './keyPress';
 
 function App({userId}) {
   const [data, setData] = useState({});
@@ -22,10 +22,6 @@ function App({userId}) {
   
   useEffect(() => {
     postGame(userId).then((response) => handleWordleApiResponse(response));
-    window.addEventListener("keydown", onKeyPress);
-    return () => {
-      window.removeEventListener("keydown", onKeyPress);
-    }
   }, [userId]);
 
   const makeGuess = (guessWord) => {

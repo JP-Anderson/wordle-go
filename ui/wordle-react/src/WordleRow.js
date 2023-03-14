@@ -1,3 +1,5 @@
+import { KeyPressHandler } from './KeyPressHandler';
+
 export default function WordleRow(props) {
 	console.log(props);
 	return(
@@ -5,7 +7,7 @@ export default function WordleRow(props) {
 	    {Array.from({ length: props.targetLength }, (_, i) => {
 	      if ( !props.guess ) {
 	        if (props.isGuessingRow) {
-		  return <td key={i}><div className="letter active-guessing-row">{props.buffer[i]}</div></td>;
+		  return <td key={i}><div className="letter active-guessing-row"><KeyPressHandler />{props.buffer[i]}</div></td>;
 		}
 	        return <td key={i}><div className="letter"></div></td>;
 	      }
