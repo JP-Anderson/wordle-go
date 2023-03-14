@@ -2,20 +2,37 @@ export let buffer = "";
 
 let bufferLim = 5;
 
+let enterEventFunction = function () {};
+
+export function setEnterEventFunction(f) {
+	enterEventFunction = f;
+}
+
 export function onKeyPress(event) {
+	console.log(event);
 	event = event || window.event;
-	console.log(keys);
+	// BACKSPACE
 	if (event.keyCode === 8) {
 		if (buffer.length > 0) {
 			buffer = buffer.slice(0, buffer.length-1);
 		}
 	}
+	// ENTER
+	else if (event.keyCode === 13) {
+		console.log("enter");
+		if ( buffer.length == bufferLim) {
+			let guess = buffer;
+			buffer = "";
+			enterEventFunction(guess);
+		}
+	}
+	// LETTERS
 	else if (event.keyCode in keys) {
 		if (buffer.length < bufferLim) {
 			buffer = buffer + keys[event.keyCode]
 		}
 	}
-	console.log("GUESS: " + buffer);
+	console.log(buffer);
 }
 
 const keys = {

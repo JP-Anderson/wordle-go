@@ -5,10 +5,8 @@ export default function WordleRow(props) {
 	    {Array.from({ length: props.targetLength }, (_, i) => {
 	      if ( !props.guess ) {
 	        if (props.isGuessingRow) {
-	          console.log(props.buffer);
 		  return <td key={i}><div className="letter active-guessing-row">{props.buffer[i]}</div></td>;
 		}
-	        console.log(i);
 	        return <td key={i}><div className="letter"></div></td>;
 	      }
 	      else {
