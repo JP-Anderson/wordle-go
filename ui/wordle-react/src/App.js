@@ -38,7 +38,6 @@ function App({userId}) {
     <div className="App">
         {modalOpen && <GameOutcomeOverlay isOpen={modalOpen} data={data} />}
 	<WordleGrid data={data} buffer={buffer} />
-	<button onClick={() => setModalOpen(true)}>TEST MODAL</button>
     </div>
   );
 }
