@@ -58,7 +58,7 @@ td .empty {
 }
 
 td .letter {
-  font-size: calc(10px + 7vmin);
+  font-size: 8vmin;
   font-weight: bold;
   color: white;
   position: absolute;
