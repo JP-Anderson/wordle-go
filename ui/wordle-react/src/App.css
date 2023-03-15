@@ -37,6 +37,7 @@
 
 table {
   width: 40%;
+  border-spacing: 1.25vmin;
 }
 
 td {
@@ -51,13 +52,9 @@ td:after {
 }
 
 td .empty {
-  border-color: #BEBEBE;
+  border-color: #DCDCDC;
   border-style: solid;
-}
-
-td .non-empty {
-  border-color: white;
-  border-style: solid;
+  border-width: 0.42vmin;
 }
 
 td .letter {

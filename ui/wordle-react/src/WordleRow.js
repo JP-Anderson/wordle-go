@@ -12,7 +12,7 @@ export default function WordleRow(props) {
 	        return <td key={i}><div className="letter empty"></div></td>;
 	      }
 	      else {
-	         const guessRowClasses = statusIntToClasses[props.guess.letter_statuses[i]] + " non-empty letter"
+	         const guessRowClasses = statusIntToClasses[props.guess.letter_statuses[i]] + " letter"
 	         return <td key={i}><div className={guessRowClasses}>{props.guess.guess_word[i]}</div></td>
 	      }
 	    })
