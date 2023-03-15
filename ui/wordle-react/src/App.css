@@ -36,13 +36,11 @@
 }
 
 table {
-  width: 50%;
+  width: 40%;
 }
 
 td {
   width: 20%;
-  border-color: black;
-  border-style: solid;
   position: relative;
 }
 
@@ -52,8 +50,18 @@ td:after {
   margin-top: 100%;
 }
 
+td .empty {
+  border-color: #BEBEBE;
+  border-style: solid;
+}
+
+td .non-empty {
+  border-color: white;
+  border-style: solid;
+}
+
 td .letter {
-  font-size: calc(10px + 8vmin);
+  font-size: calc(10px + 7vmin);
   font-weight: bold;
   color: white;
   position: absolute;

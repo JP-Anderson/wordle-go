@@ -7,12 +7,13 @@ export default function WordleRow(props) {
 	    {Array.from({ length: props.targetLength }, (_, i) => {
 	      if ( !props.guess ) {
 	        if (props.isGuessingRow) {
-		  return <td key={i}><div className="letter active-guessing-row"><KeyPressHandler />{props.buffer[i]}</div></td>;
+		  return <td key={i}><div className="letter empty active-guessing-row"><KeyPressHandler />{props.buffer[i]}</div></td>;
 		}
-	        return <td key={i}><div className="letter"></div></td>;
+	        return <td key={i}><div className="letter empty"></div></td>;
 	      }
 	      else {
-	         return <td key={i}><div className={statusIntToClasses[props.guess.letter_statuses[i]]}>{props.guess.guess_word[i]}</div></td>
+	         const guessRowClasses = statusIntToClasses[props.guess.letter_statuses[i]] + " non-empty letter"
+	         return <td key={i}><div className={guessRowClasses}>{props.guess.guess_word[i]}</div></td>
 	      }
 	    })
 	    }
@@ -20,4 +21,4 @@ export default function WordleRow(props) {
 	);
 }
 
-const statusIntToClasses = { "2" : "correct letter", "1" : "misplaced letter", "0" : "incorrect letter" };
+const statusIntToClasses = { "2" : "correct", "1" : "misplaced", "0" : "incorrect" };
