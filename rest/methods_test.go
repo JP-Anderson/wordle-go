@@ -18,7 +18,9 @@ func stubNextWordleWordFunc(target string) {
 	NewWord = func() string {
 		return target
 	}
+	ValidWord = func(s string) bool { return true }
 }
+
 
 func TestHealthRoute(t *testing.T) {
 	router := Router()
@@ -125,6 +127,28 @@ func TestPostGuessReturnsErrorWithGuessesOfIncorrectLength(t *testing.T) {
 	router.ServeHTTP(w3, req3)
 	assert.Equal(t, 400, w3.Code)
 	assert.Equal(t, "\"guess must be same length as target word (5), was 6\"", w3.Body.String())
+}
+
+func TestPostGuessReturnsErrorForNonDictionaryWord(t *testing.T) {
+	router := Router()
+	stubNextWordleWordFunc("snack")
+	ValidWord = func (w string) bool { return false }
+
+	w := httptest.NewRecorder()
+	req := newGameRequest(t, "1")
+	router.ServeHTTP(w, req)
+	assert.Equal(t, 200, w.Code)
+	
+	w2 := httptest.NewRecorder()
+	guessRequest := &model.GuessRequest{
+		UserID: "1",
+		Guess: "zzssz",	
+	}
+
+	req2, _ := http.NewRequest("POST", "/guess", guessModelToBytesBuffer(t, guessRequest))
+	router.ServeHTTP(w2, req2)
+	assert.Equal(t, 400, w2.Code)
+	assert.Equal(t, "\"guess must be a valid word in the word list\"", w2.Body.String())
 }
 
 func TestGuessesAlwaysReturnedAsCaps(t *testing.T) {

@@ -3,6 +3,7 @@ package rest
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"wordle/engine"
 	"wordle/rest/model"
 	"wordle/rest/middleware"
@@ -27,6 +28,10 @@ func Router() *gin.Engine {
 
 var NewWord = func () string {
 	return wl.NextWord()
+}
+
+var ValidWord = func (w string) bool {
+	return wl.Valid(strings.ToLower(w))
 }
 
 func postGame(c *gin.Context) {
@@ -84,6 +89,11 @@ func postGuess(c *gin.Context) {
 			len(newGuess.Guess),
 		)
 		c.IndentedJSON(http.StatusBadRequest, errorMsg)
+		return
+	}
+
+	if !ValidWord(newGuess.Guess) {
+		c.IndentedJSON(http.StatusBadRequest, "guess must be a valid word in the word list")
 		return
 	}
 
